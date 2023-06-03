@@ -56,6 +56,8 @@ int Board::numberOfNeighboursForCell(int x, int y) {
     int numNeighbours = 0;
     for (int i = -1; i <= 1; i+=1) {
         for (int j = -1; j <= 1; j+=1) {
+           // Don't count yourself as a neighbour
+           if (i == 0 && j == 0) { continue; }
            auto [cx, cy] = normalizeCoordinates(i+x, j+y);
            numNeighbours += board[cy][cx]; 
         }
