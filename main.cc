@@ -106,7 +106,7 @@ void renderBoard(Board board) {
     for (vector<bool> row: board.getBoard()) {
         for (bool cell: row) {
             if (cell) {
-                cout << ".";
+                cout << "\u2588";
             } else {
                 cout << " ";
             }
