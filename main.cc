@@ -21,8 +21,10 @@ class Board {
         int getSize();
         int numberOfNeighboursForCell(int x, int y);
         void updateCell(int x, int y, bool is_alive);
+        void updateBoard();
     private:
         vector<vector<bool>> board;
+        vector<vector<bool>> new_board;
         int boardSize;
         tuple<int, int> normalizeCoordinates(int x, int y);
 };
@@ -75,19 +77,27 @@ void Board::updateCell(int x, int y, bool is_alive) {
     board[y][x] = is_alive;
 }
 
-void updateBoard(Board& board) {
-    for (auto y=0;y<board.getSize();y+=1) {
-        for (int x=0;x<board.getSize();x+=1) {
-            int numNeighbors = board.numberOfNeighboursForCell(x, y);
+void Board::updateBoard() {
+    new_board = {};
+    for (auto y=0;y<boardSize;y+=1) {
+        vector<bool> row = {};
+        for (int x=0;x<boardSize;x+=1) {
+            int numNeighbors = numberOfNeighboursForCell(x, y);
 
             if (numNeighbors < 2 || numNeighbors > 3) {
-                board.updateCell(x, y, 0);
+                row.push_back(0);
             } else if (numNeighbors == 3) {
-                board.updateCell(x, y, 1);
+                row.push_back(1);
+            } else {
+                row.push_back(board[y][x]);
             }
         }
+
+        new_board.push_back(row);
     }
 
+    // Swap new board for old board.
+    board = new_board;
 }
 
 void renderBoard(Board board) {
@@ -117,7 +127,7 @@ int main() {
     while (true) {
         clearScreen();
         renderBoard(*board);
-        updateBoard(*board);
+        board->updateBoard();
         this_thread::sleep_for(0.1s);
     }
 }
